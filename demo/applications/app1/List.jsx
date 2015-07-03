@@ -16,6 +16,8 @@ export default ReactAdmin.createTable({
         // define default values
         return {
             filters: {name: ""},
+            elements: [],
+            nbAllElements: 0,
             errors: {}
         };
     },
@@ -59,7 +61,8 @@ export default ReactAdmin.createTable({
             page: filters.page,
             per_page: filters.per_page,
             filters: filters,
-            elements: elements
+            elements: elements,
+            nbAllElements: filteredElements.length
         });
     },
 

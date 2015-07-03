@@ -11,6 +11,11 @@ var Card = {
 
 var Create = require('../utils/Create');
 
+var Pager = {
+    PreviousButton: require('./PreviousButton'),
+    NextButton: require('./NextButton')
+};
+
 var _ = require('lodash');
 var Url = require('url');
 
@@ -39,6 +44,7 @@ var BaseTable = {
             next: null,
             previous: null,
             elements: [],
+            nbAllElements: 0,
             filters: []
         };
     },
@@ -103,6 +109,12 @@ var BaseTable = {
         return page;
     },
 
+    getPageMax() {
+        var pageMax = Math.ceil(this.state.nbAllElements/this.state.per_page);
+
+        return pageMax;
+    },
+
     renderRow (element) {
         // this method should be overwritten to create your own rendering element
         return <Card.List>
@@ -145,14 +157,11 @@ var BaseTable = {
                     {_.map(this.state.elements, this.renderRow, this)}
                 </B.Row>
 
-                <B.Pager>
-                    <li className="previous">
-                        <Router.Link to={this.props.index} query={this.getFilters({page: this.getPage(-1)})} onClick={this.search.bind(this, -1)} >&larr; Previous Page</Router.Link>
-                    </li>
-                    <li className="next">
-                        <Router.Link to={this.props.index} query={this.getFilters({page: this.getPage(1)})} onClick={this.search.bind(this, 1)} >Next Page &rarr;</Router.Link>
-                    </li>
-                </B.Pager>
+                <ul className="pager">
+                    <Pager.PreviousButton index={this.props.index} page={this.state.page} query={this.getFilters({page: this.getPage(-1)})} onClick={this.search.bind(this, -1)} />
+                    <Pager.NextButton index={this.props.index} page={this.state.page} pageMax={this.getPageMax()} query={this.getFilters({page: this.getPage(1)})} onClick={this.search.bind(this, 1)} />
+                </ul>
+
             </div>
         );
     }
